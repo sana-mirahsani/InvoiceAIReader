@@ -1,15 +1,37 @@
 import asyncio
-import json
-
-from agents import Agent, Runner
-from openai import AsyncOpenAI
-from dotenv import load_dotenv
 import os
 
+from agents import Agent, Runner, function_tool
+from openai import AsyncOpenAI
+from dotenv import load_dotenv
+
+
 load_dotenv()
+
 print("API KEY FOUND:", os.getenv("OPENAI_API_KEY") is not None)
 
 client = AsyncOpenAI()
+
+
+# ==========================================
+# TOOL: Save text to a file
+# ==========================================
+
+@function_tool
+def save_to_txt(filename: str, content: str) -> str:
+    """
+    Save text content to a local TXT file.
+    """
+
+    with open(filename, "w", encoding="utf-8") as f:
+        f.write(content)
+
+    return f"File successfully saved to {filename}"
+
+
+# ==========================================
+# AGENT
+# ==========================================
 
 invoice_agent = Agent(
     name="Invoice Agent",
@@ -83,11 +105,27 @@ Return exactly this structure:
         "notes": []
     }
 }
+
+After extracting the invoice information:
+
+1. Create the final JSON.
+2. Use the save_to_txt tool to save the exact JSON output
+   into a file named "invoice_result.txt".
+3. The content saved in the file must be exactly the JSON
+   that you generated.
+4. After saving the file, return the same JSON as your final output.
 """,
 
     model="gpt-6-luna",
+
+    # Give the Agent access to the tool
+    tools=[save_to_txt],
 )
 
+
+# ==========================================
+# MAIN
+# ==========================================
 
 async def main():
 
@@ -97,7 +135,7 @@ async def main():
         purpose="user_data"
     )
 
-    # Run the agent
+    # Run the Agent
     result = await Runner.run(
         invoice_agent,
         input=[
@@ -110,7 +148,7 @@ async def main():
                     },
                     {
                         "type": "input_text",
-                        "text": "Analyze this invoice and return the structured JSON."
+                        "text": "Analyze this invoice, save the JSON result using the available tool, and return the JSON."
                     }
                 ]
             }

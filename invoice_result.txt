@@ -1,0 +1,46 @@
+{
+  "invoice_number": "INV-0001",
+  "invoice_date": "01.01.2024",
+  "due_date": "15.01.2024",
+  "supplier": {
+    "name": "YOUR COMPANY",
+    "address": "12 Example Avenue, Pontefract, WF8 4LS"
+  },
+  "customer": {
+    "name": "Client Name",
+    "address": "12 Example Avenue, City, AB1 2CD"
+  },
+  "currency": "GBP (£)",
+  "subtotal": "£50,00",
+  "discount": "-£5,00",
+  "tax": "£10,00",
+  "total": "£55,00",
+  "payment_terms": "Pay by bank transfer",
+  "line_items": [
+    {
+      "description": "Item",
+      "quantity": 1,
+      "unit_price": "10,00",
+      "total": "£10,00"
+    },
+    {
+      "description": "Item",
+      "quantity": 2,
+      "unit_price": "10,00",
+      "total": "£20,00"
+    },
+    {
+      "description": "Item",
+      "quantity": 2,
+      "unit_price": "10,00",
+      "total": "£20,00"
+    }
+  ],
+  "validation": {
+    "calculation_consistent": true,
+    "notes": [
+      "Line items sum to the stated subtotal of £50,00.",
+      "The stated VAT of £10,00 is 20% of the subtotal; subtracting the £5,00 discount gives the stated total of £55,00."
+    ]
+  }
+}
